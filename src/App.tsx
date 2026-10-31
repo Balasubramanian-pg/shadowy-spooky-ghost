@@ -35,4 +35,58 @@ const App: React.FC = () => {
     setTransactions(data.transactions);
     setBudgets(data.budgets);
     setHoldings(data.holdings);
-    setGoal
+    setGoals(data.goals);
+    setHasData(true);
+  };
+
+  const handleLoadDemo = () => {
+    setTransactions(MOCK_TRANSACTIONS);
+    setBudgets(MOCK_BUDGETS);
+    setHoldings(MOCK_HOLDINGS);
+    setGoals(MOCK_GOALS);
+    setHasData(true);
+  };
+
+  const renderContent = () => {
+    switch (currentView) {
+      case 'overview': 
+        return <Overview timeRange={overviewTimeRange} onTimeRangeChange={setOverviewTimeRange} transactions={transactions} goals={goals} />;
+      case 'income-expenses': 
+        return <IncomeExpenses filters={filters} data={transactions} />;
+      case 'budget': 
+        return <Budget data={budgets} />;
+      case 'investments': 
+        return <Investments data={holdings} />;
+      case 'goals': 
+        return <Goals data={goals} />;
+      default: return <div className="p-10 text-center text-slate-500 font-medium">Settings Coming Soon</div>;
+    }
+  };
+
+  if (!hasData) {
+    return <FileUploader onDataLoaded={handleDataLoaded} onLoadDemo={handleLoadDemo} />;
+  }
+
+  return (
+    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900 animate-fade-in">
+      <Sidebar 
+        currentView={currentView} 
+        onChangeView={setCurrentView} 
+        isOpen={isSidebarOpen}
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+      />
+
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? 'ml-72' : 'ml-20'}`}>
+        <Topbar title={currentView} />
+        
+        <main className="flex-1 overflow-y-auto overflow-x-hidden relative">
+          {renderContent()}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default App;
