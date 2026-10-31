@@ -1,1 +1,2 @@
-export * from './KPICard'
+export * from './KPICard';
+export * from './Card';
