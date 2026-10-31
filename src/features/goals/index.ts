@@ -1,2 +1,2 @@
 export * from './Goals';
-expor
+export { default } from './Goals';
