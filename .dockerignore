@@ -5,3 +5,8 @@ dist
 tests
 coverage
 .env
+.env.local
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
