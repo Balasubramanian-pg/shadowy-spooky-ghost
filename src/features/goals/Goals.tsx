@@ -99,4 +99,81 @@ const Goals: React.FC<GoalsProps> = ({ data: goals }) => {
                              </div>
 
                              {/* Progress Bar */}
-                           
+                             <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden mb-2 shadow-inner">
+                                 <div 
+                                    className="h-full bg-gradient-to-r from-opus-blue to-opus-teal shadow-sm relative transition-all duration-[1500ms] ease-out" 
+                                    style={{ width: `${mounted ? percent : 0}%` }}
+                                 >
+                                    <div className="absolute top-0 right-0 bottom-0 w-1 bg-white/20"></div>
+                                 </div>
+                             </div>
+                             <div className="flex justify-between text-xs text-slate-400 font-semibold uppercase tracking-wide">
+                                 <span>Start</span>
+                                 <span>50%</span>
+                                 <span>Goal</span>
+                             </div>
+                             
+                             <div className="mt-5 pt-4 border-t border-slate-50 flex justify-between items-center">
+                                 <div className="text-sm">
+                                     <span className="text-slate-500">Monthly Contribution: </span>
+                                     <span className="font-bold text-slate-800">{formatINR(goal.monthlyContribution)}</span>
+                                 </div>
+                                 <div className={`flex items-center text-sm font-bold px-3 py-1 rounded-full ${statusColorClass} transition-colors duration-300`}>
+                                     <StatusIcon size={14} className="mr-1.5 stroke-2" /> {statusText}
+                                 </div>
+                             </div>
+                        </Card>
+                    )
+                })}
+                {goals.length === 0 && <div className="text-slate-500 text-center py-10">No goals found in upload.</div>}
+            </div>
+
+            {/* Simulation */}
+            <Card className="bg-slate-900 text-white border-slate-800">
+                <div className="flex items-center space-x-3 mb-6">
+                    <div className="p-2 bg-slate-800 rounded-lg text-blue-400">
+                        <Calculator size={20} />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-bold text-white tracking-tight">Retirement Projection</h2>
+                        <p className="text-sm text-slate-400">Monte Carlo Simulation (10,000 runs)</p>
+                    </div>
+                </div>
+                
+                <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={simulationData}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" />
+                            <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#94a3b8'}} />
+                            <YAxis axisLine={false} tickLine={false} tickFormatter={(v) => formatCompactINR(v)} tick={{fill: '#94a3b8'}} />
+                            <Tooltip 
+                                formatter={(v: number) => formatINR(v)}
+                                contentStyle={{
+                                  ...GLASS_TOOLTIP_STYLE,
+                                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                  color: '#0F172A' // Overriding color for readability on light tooltip
+                                }}
+                                labelStyle={{color: '#64748B'}}
+                            />
+                            
+                            {/* Confidence Bands */}
+                            <Area type="monotone" dataKey="p90" stroke="none" fill={COLORS.blue} fillOpacity={0.2} />
+                            <Area type="monotone" dataKey="p10" stroke="none" fill="#0f172a" fillOpacity={1} /> {/* Masking for band effect */}
+                            
+                            <Line type="monotone" dataKey="p50" stroke={COLORS.blue} strokeWidth={3} dot={false} name="Median Outcome" />
+                            <Line type="monotone" dataKey="p90" stroke={COLORS.green} strokeWidth={1} strokeDasharray="3 3" dot={false} name="Optimistic" />
+                            <Line type="monotone" dataKey="p10" stroke={COLORS.amber} strokeWidth={1} strokeDasharray="3 3" dot={false} name="Conservative" />
+                        </ComposedChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="mt-6 p-4 bg-slate-800/50 border border-slate-700 rounded-xl text-sm text-blue-200">
+                    <strong className="text-white block mb-1 text-lg">87% Success Rate</strong>
+                    Based on your current savings rate and asset allocation, you are highly likely to meet your retirement goal of <strong>{formatINR(50000000)}</strong> by age 60.
+                </div>
+            </Card>
+        </div>
+    </div>
+  );
+};
+
+export default Goals;
