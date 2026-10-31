@@ -1,2 +1,2 @@
 export * from '../features/budget';
-expor
+export { default } from '../features/budget';
