@@ -1,2 +1,2 @@
 export * from '../features/investments';
-expor
+export { default } from '../features/investments';
