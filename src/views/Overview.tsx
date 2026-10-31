@@ -1,2 +1,2 @@
 export * from '../features/overview';
-expor
+export { default } from '../features/overview';
