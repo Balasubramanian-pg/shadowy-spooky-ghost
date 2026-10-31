@@ -47,4 +47,53 @@ export const parseWorkbookData = (workbookSheets: RawWorkbookInput): DashboardDa
   }));
 
   // Map & validate investment holdings
-  const holdings
+  const holdings: InvestmentHolding[] = holdingsRaw.map((h: any) => ({
+    ticker: h.ticker ? String(h.ticker).toUpperCase() : 'UNKNOWN',
+    name: h.name ? String(h.name) : 'Unknown Asset',
+    shares: Math.max(0, Number(h.shares) || 0),
+    costBasis: Math.max(0, Number(h.costBasis) || 0),
+    currentPrice: Math.max(0, Number(h.currentPrice) || 0),
+    allocation: 0
+  }));
+
+  // Calculate allocations based on current total portfolio value
+  const totalPortfolioValue = holdings.reduce((sum, h) => sum + (h.shares * h.currentPrice), 0);
+  holdings.forEach(h => {
+    h.allocation = totalPortfolioValue > 0 ? Number((((h.shares * h.currentPrice) / totalPortfolioValue) * 100).toFixed(2)) : 0;
+  });
+
+  // Map & validate financial goals
+  const goals: FinancialGoal[] = goalsRaw.map((g: any, i: number) => {
+    const rawPriority = String(g.priority || 'medium').toLowerCase();
+    const priority: 'high' | 'medium' | 'low' = (rawPriority === 'high' || rawPriority === 'low') ? rawPriority : 'medium';
+    return {
+      id: g.id || `g-${i}`,
+      name: g.name ? String(g.name) : `Goal ${i + 1}`,
+      targetAmount: Math.max(0, Number(g.targetAmount) || 0),
+      currentAmount: Math.max(0, Number(g.currentAmount) || 0),
+      monthlyContribution: Math.max(0, Number(g.monthlyContribution) || 0),
+      targetDate: g.targetDate ? String(g.targetDate) : '2025-12-31',
+      priority
+    };
+  });
+
+  return {
+    transactions,
+    budgets,
+    holdings,
+    goals
+  };
+};
+
+export const parseExcelFile = async (file: File): Promise<DashboardDataset> => {
+  const data = await file.arrayBuffer();
+  const workbook = read(data);
+  const rawData: RawWorkbookInput = {
+    Transactions: utils.sheet_to_json(workbook.Sheets['Transactions'] || {}),
+    Budget: utils.sheet_to_json(workbook.Sheets['Budget'] || {}),
+    Investments: utils.sheet_to_json(workbook.Sheets['Investments'] || {}),
+    Goals: utils.sheet_to_json(workbook.Sheets['Goals'] || {})
+  };
+
+  return parseWorkbookData(rawData);
+};
