@@ -112,4 +112,96 @@ const Investments: React.FC<InvestmentsProps> = ({ data: holdings }) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Allocation Donut */}
-               
+                <Card className="flex flex-col items-center justify-center">
+                     <SectionHeader title="Asset Allocation" icon={PieIcon} />
+                     <div className="h-64 w-full relative">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={allocationData}
+                                    innerRadius={70}
+                                    outerRadius={90}
+                                    paddingAngle={4}
+                                    dataKey="value"
+                                    stroke="none"
+                                >
+                                    {allocationData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS.charts[index % COLORS.charts.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip contentStyle={GLASS_TOOLTIP_STYLE} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none flex-col">
+                             <div className="text-slate-400 text-xs font-semibold uppercase">Top Holding</div>
+                             <div className="text-slate-900 font-bold text-lg mt-1">{topHolding}</div>
+                        </div>
+                     </div>
+                </Card>
+
+                {/* Holdings Table */}
+                <Card className="lg:col-span-2">
+                    <SectionHeader title="Portfolio Holdings" subtitle="Live market positions" icon={LineChart} />
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead className="bg-slate-50 border-b border-slate-100 text-xs uppercase text-slate-500 tracking-wider">
+                                <tr>
+                                    <th className="py-3 px-4 rounded-tl-lg font-semibold">Ticker</th>
+                                    <th className="py-3 px-4 font-semibold">Qty</th>
+                                    <th className="py-3 px-4 font-semibold">Price</th>
+                                    <th className="py-3 px-4 text-right font-semibold">Value</th>
+                                    <th className="py-3 px-4 text-right rounded-tr-lg font-semibold">Gain/Loss</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {sortedHoldings.map((h) => {
+                                    const value = h.shares * h.currentPrice;
+                                    const gain = (h.currentPrice - h.costBasis) * h.shares;
+                                    const gainPercent = h.costBasis > 0 ? ((h.currentPrice - h.costBasis) / h.costBasis) * 100 : 0;
+                                    
+                                    const isSignificantGain = gainPercent > 10;
+                                    const isSignificantLoss = gainPercent < -10;
+                                    const isPos = gain > 0;
+
+                                    return (
+                                        <tr key={h.ticker} className="hover:bg-slate-50 transition-colors group">
+                                            <td className="py-4 px-4">
+                                                <div className="flex items-center">
+                                                    <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs mr-3 shadow-sm group-hover:scale-105 transition-transform">
+                                                        {h.ticker.substring(0, 2)}
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-bold text-slate-800">{h.ticker}</div>
+                                                        <div className="text-xs text-slate-400 font-medium">{h.name}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="py-4 px-4 text-sm text-slate-600 font-medium">{h.shares}</td>
+                                            <td className="py-4 px-4 text-sm text-slate-600 font-medium">{formatINR(h.currentPrice)}</td>
+                                            <td className="py-4 px-4 text-right font-bold text-slate-900">{formatINR(value)}</td>
+                                            <td className="py-4 px-4 text-right">
+                                                <div className={`flex items-center justify-end font-bold text-sm ${isPos ? 'text-opus-green' : 'text-opus-red'}`}>
+                                                    {isSignificantGain ? (
+                                                        <ArrowUp size={14} className="mr-1 stroke-2 text-opus-green"/>
+                                                    ) : isSignificantLoss ? (
+                                                        <ArrowDown size={14} className="mr-1 stroke-2 text-opus-red"/>
+                                                    ) : (
+                                                        <ArrowRight size={14} className="mr-1 stroke-2 text-slate-400"/>
+                                                    )}
+                                                    <span>{Math.abs(gainPercent).toFixed(1)}%</span>
+                                                </div>
+                                                <div className="text-xs text-slate-400 mt-1">{isPos ? '+' : ''}{formatINR(gain)}</div>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </Card>
+            </div>
+        </div>
+    );
+};
+
+export default Investments;
