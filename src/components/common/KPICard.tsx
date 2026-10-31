@@ -49,4 +49,50 @@ export const KPICard: React.FC<{ metric: KPIInterface }> = ({ metric }) => {
       />
 
       <div className="flex justify-between items-start mb-4 relative z-10">
-   
+        <div
+          className={`p-3 rounded-xl bg-${metric.color}-50 text-${metric.color}-600 ring-1 ring-${metric.color}-100`}
+        >
+          <Icon size={22} color={COLORS[metric.color] || COLORS.blue} strokeWidth={2} />
+        </div>
+        <div
+          className={`flex items-center text-sm font-semibold px-2 py-1 rounded-full ${
+            isPositive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+          }`}
+        >
+          {isPositive ? <ArrowUpRight size={14} className="mr-1" /> : <ArrowDownRight size={14} className="mr-1" />}
+          {Math.abs(metric.change || 0)}%
+        </div>
+      </div>
+
+      <div className="relative z-10">
+        <h3 className="text-slate-500 text-sm font-medium mb-1 tracking-wide">{metric.title}</h3>
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">{displayValue}</h2>
+        </div>
+        <p className="text-xs text-slate-400 mt-1 font-medium">{metric.subValue}</p>
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-16 opacity-20 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={trendData}>
+            <defs>
+              <linearGradient id={`grad-${metric.title}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={COLORS[metric.color] || COLORS.blue} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={COLORS[metric.color] || COLORS.blue} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <Area
+              type="monotone"
+              dataKey="val"
+              stroke={COLORS[metric.color] || COLORS.blue}
+              fill={`url(#grad-${metric.title})`}
+              strokeWidth={3}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
+export default KPICard;
