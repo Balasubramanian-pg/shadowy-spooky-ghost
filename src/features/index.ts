@@ -1,3 +1,5 @@
 export * from './overview';
 export * from './income-expenses';
-export * 
+export * from './budget';
+export * from './investments';
+export * from './goals';
