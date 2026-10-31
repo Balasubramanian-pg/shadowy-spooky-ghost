@@ -18,4 +18,19 @@ export const Topbar: React.FC<TopbarProps> = ({ title }) => {
         </span>
       </div>
 
-      <div
+      <div className="flex items-center space-x-4">
+        <button
+          onClick={() => window.print()}
+          className="flex items-center px-4 py-2 text-sm font-semibold text-slate-600 hover:text-opus-blue bg-white border border-slate-200 hover:border-opus-blue hover:bg-blue-50/50 rounded-lg transition-all shadow-sm"
+        >
+          <Download size={16} className="mr-2" /> Export Report
+        </button>
+        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-opus-blue to-indigo-600 text-white flex items-center justify-center font-bold text-sm ring-4 ring-blue-50 shadow-lg cursor-pointer hover:scale-105 transition-transform">
+          JD
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Topbar;
