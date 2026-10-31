@@ -97,4 +97,105 @@ const Overview: React.FC<OverviewProps> = ({ timeRange, onTimeRangeChange, trans
               className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
                 timeRange === range 
                   ? 'bg-opus-blue text-white shadow-md' 
-                  : 'text-slate-500 hover:bg-slate-50 hover:t
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+              }`}
+            >
+              {range}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* KPI Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {kpis.map((kpi, idx) => (
+          <KPICard key={idx} metric={kpi} />
+        ))}
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Cash Flow Chart */}
+        <div className="lg:col-span-2">
+          <Card className="h-full">
+            <SectionHeader 
+                title="Cash Flow Analysis" 
+                subtitle="Income vs Expenses Distribution" 
+                icon={BarChart2}
+                action={
+                    <button 
+                        onClick={handleExport}
+                        className="flex items-center text-sm font-medium text-slate-600 hover:text-opus-blue bg-slate-50 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+                    >
+                        <Download size={14} className="mr-2" /> Export
+                    </button>
+                }
+            />
+            <div className="h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={cashFlowData} barSize={40} margin={{ top: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748B', fontSize: 13, fontWeight: 500}} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748B', fontSize: 12}} tickFormatter={(val) => formatCompactINR(val)} />
+                  <Tooltip 
+                    cursor={{fill: '#f1f5f9', radius: 4}}
+                    contentStyle={GLASS_TOOLTIP_STYLE}
+                    formatter={(value: number) => [formatINR(value), 'Amount']}
+                  />
+                  <Bar dataKey="value" radius={[6, 6, 6, 6]}>
+                    {cashFlowData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={getColor(entry.type)} />
+                    ))}
+                    <LabelList 
+                      dataKey="value" 
+                      position="top" 
+                      formatter={(val: number) => formatINR(val)} 
+                      style={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }} 
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
+
+        {/* Quick Alerts / Side Panel */}
+        <div>
+          <Card className="h-full bg-gradient-to-br from-white to-slate-50 relative overflow-hidden">
+             {/* Decorative blob */}
+             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full blur-3xl opacity-50 -mr-10 -mt-10 pointer-events-none"></div>
+
+            <SectionHeader title="Smart Alerts" icon={Bell} />
+            <div className="space-y-4 relative z-10">
+              <div className="p-4 bg-white rounded-xl shadow-sm border-l-4 border-opus-red hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-start">
+                    <h4 className="text-opus-red font-bold text-sm mb-1">Budget Exceeded</h4>
+                    <span className="text-xs text-slate-400">2h ago</span>
+                </div>
+                <p className="text-sm text-slate-600 mt-1">Dining Out is <strong>₹2,500</strong> over budget.</p>
+              </div>
+              
+              <div className="p-4 bg-white rounded-xl shadow-sm border-l-4 border-opus-amber hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-start">
+                    <h4 className="text-opus-amber font-bold text-sm mb-1">Upcoming Bill</h4>
+                    <span className="text-xs text-slate-400">1d ago</span>
+                </div>
+                <p className="text-sm text-slate-600 mt-1">Car Insurance <strong>(₹12,000)</strong> due in 3 days.</p>
+              </div>
+              
+               <div className="p-4 bg-white rounded-xl shadow-sm border-l-4 border-opus-green hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-start">
+                    <h4 className="text-opus-green font-bold text-sm mb-1">Goal Reached</h4>
+                    <span className="text-xs text-slate-400">Just now</span>
+                </div>
+                <p className="text-sm text-slate-600 mt-1">Hit 25% of Home Down Payment! 🎉</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Overview;
