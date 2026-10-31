@@ -1,0 +1,17 @@
+{
+  "name": "opus-finance-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Enterprise-grade personal finance analytics dashboard with real-time KPI monitoring, portfolio management, and automated CI/CD pipeline",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\"",
+    "typecheck": "tsc 
