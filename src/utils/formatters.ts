@@ -20,4 +20,29 @@ export const formatCompactINR = (amount: number): string => {
     return '₹0';
   }
   return new Intl.NumberFormat('en-IN', {
-   
+    style: 'currency',
+    currency: 'INR',
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 0,
+  }).format(amount);
+};
+
+export const formatPercentage = (val: number, decimals: number = 1): string => {
+  if (isNaN(val) || val === null || val === undefined) {
+    return '0.0%';
+  }
+  return `${val.toFixed(decimals)}%`;
+};
+
+export const formatDate = (dateStr: string): string => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return new Intl.DateTimeFormat('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(d);
+};
