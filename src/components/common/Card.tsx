@@ -29,4 +29,30 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   </div>
 );
 
-export const Card: React.FC<{ children: React.R
+export const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({
+  children,
+  className = '',
+}) => (
+  <div
+    className={`bg-white rounded-2xl shadow-soft border border-slate-100 p-6 ${className} hover:shadow-lg transition-shadow duration-300`}
+  >
+    {children}
+  </div>
+);
+
+export const Badge: React.FC<{
+  type: 'success' | 'warning' | 'danger' | 'neutral';
+  children: React.ReactNode;
+}> = ({ type, children }) => {
+  const styles = {
+    success: 'bg-green-100 text-green-700 ring-1 ring-green-200',
+    warning: 'bg-amber-100 text-amber-700 ring-1 ring-amber-200',
+    danger: 'bg-red-100 text-red-700 ring-1 ring-red-200',
+    neutral: 'bg-slate-100 text-slate-600 ring-1 ring-slate-200',
+  };
+  return (
+    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${styles[type]}`}>
+      {children}
+    </span>
+  );
+};
