@@ -4,4 +4,12 @@
   "icons": [
     {
       "src": "/favicon.svg",
-      "type": "image/s
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F8FAFC",
+  "theme_color": "#2563EB",
+  "display": "standalone"
+}
