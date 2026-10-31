@@ -1,2 +1,2 @@
 export * from '../features/goals';
-expor
+export { default } from '../features/goals';
