@@ -25,4 +25,24 @@ export const calculateSavingsRate = (income: number, expenses: number): number =
 };
 
 export const calculateBudgetUtilization = (budget: BudgetCategory): number => {
-  if (!budget.budget 
+  if (!budget.budget || budget.budget <= 0) return 0;
+  return Number(((budget.actual / budget.budget) * 100).toFixed(1));
+};
+
+export const calculatePortfolioValue = (holdings: InvestmentHolding[]): number => {
+  return holdings.reduce((sum, h) => sum + (h.shares * h.currentPrice), 0);
+};
+
+export const calculatePortfolioGain = (holdings: InvestmentHolding[]): { gain: number; percentage: number } => {
+  const currentTotal = holdings.reduce((sum, h) => sum + (h.shares * h.currentPrice), 0);
+  const costTotal = holdings.reduce((sum, h) => sum + (h.shares * h.costBasis), 0);
+  const gain = currentTotal - costTotal;
+  const percentage = costTotal > 0 ? Number(((gain / costTotal) * 100).toFixed(2)) : 0;
+  return { gain, percentage };
+};
+
+export const calculateGoalProgress = (goal: FinancialGoal): number => {
+  if (!goal.targetAmount || goal.targetAmount <= 0) return 0;
+  const pct = (goal.currentAmount / goal.targetAmount) * 100;
+  return Math.min(100, Number(pct.toFixed(1)));
+};
