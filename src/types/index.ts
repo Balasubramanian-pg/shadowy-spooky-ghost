@@ -25,4 +25,43 @@ export interface Transaction {
   id: string;
   date: string;
   description: string;
-  category: st
+  category: string;
+  account: string;
+  amount: number;
+  type: 'income' | 'expense';
+  status: 'posted' | 'pending';
+  isRecurring: boolean;
+}
+
+export interface BudgetCategory {
+  category: string;
+  budget: number;
+  actual: number;
+  trend: number; // vs last month
+}
+
+export interface InvestmentHolding {
+  ticker: string;
+  name: string;
+  shares: number;
+  costBasis: number;
+  currentPrice: number;
+  allocation: number;
+}
+
+export interface FinancialGoal {
+  id: string;
+  name: string;
+  targetAmount: number;
+  currentAmount: number;
+  monthlyContribution: number;
+  targetDate: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface DashboardDataset {
+  transactions: Transaction[];
+  budgets: BudgetCategory[];
+  holdings: InvestmentHolding[];
+  goals: FinancialGoal[];
+}
