@@ -61,4 +61,51 @@ describe('Financial Math & Calculation Utilities', () => {
     expect(rate).toBe(60);
   });
 
-  it('ret
+  it('returns 0 savings rate when income is 0 or negative', () => {
+    expect(calculateSavingsRate(0, 5000)).toBe(0);
+    expect(calculateSavingsRate(1000, 2000)).toBe(0);
+  });
+
+  it('calculates budget utilization percentage', () => {
+    const budget: BudgetCategory = {
+      category: 'Food',
+      budget: 15000,
+      actual: 18000,
+      trend: 20,
+    };
+    expect(calculateBudgetUtilization(budget)).toBe(120);
+  });
+
+  it('calculates portfolio total value and gain', () => {
+    const holdings: InvestmentHolding[] = [
+      { ticker: 'INFY', name: 'Infosys', shares: 10, costBasis: 1000, currentPrice: 1500, allocation: 0 },
+      { ticker: 'TCS', name: 'TCS', shares: 5, costBasis: 3000, currentPrice: 3200, allocation: 0 },
+    ];
+    // Total current: (10 * 1500) + (5 * 3200) = 15000 + 16000 = 31000
+    // Total cost: (10 * 1000) + (5 * 3000) = 10000 + 15000 = 25000
+    // Gain: 6000, Percentage: (6000 / 25000) * 100 = 24%
+    expect(calculatePortfolioValue(holdings)).toBe(31000);
+    const { gain, percentage } = calculatePortfolioGain(holdings);
+    expect(gain).toBe(6000);
+    expect(percentage).toBe(24);
+  });
+
+  it('calculates financial goal progress capped at 100%', () => {
+    const goal: FinancialGoal = {
+      id: 'g-1',
+      name: 'Emergency Fund',
+      targetAmount: 200000,
+      currentAmount: 100000,
+      monthlyContribution: 10000,
+      targetDate: '2025-01-01',
+      priority: 'high',
+    };
+    expect(calculateGoalProgress(goal)).toBe(50);
+
+    const completedGoal: FinancialGoal = {
+      ...goal,
+      currentAmount: 250000,
+    };
+    expect(calculateGoalProgress(completedGoal)).toBe(100);
+  });
+});
