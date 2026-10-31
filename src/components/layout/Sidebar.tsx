@@ -83,4 +83,77 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 isActive
                   ? 'bg-opus-blue text-white shadow-glow'
                   : 'text-slate-500 hover:bg-slate-50 hover:text-opus-blue'
-              }`
+              }`}
+            >
+              <Icon
+                size={20}
+                className={`relative z-10 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-opus-blue'}`}
+              />
+              <span
+                className={`relative z-10 ml-3 font-medium whitespace-nowrap overflow-hidden transition-all duration-300 ${
+                  isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'
+                }`}
+              >
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Filter Panel */}
+      <div
+        className={`p-6 border-t border-slate-100 bg-slate-50/50 backdrop-blur-sm ${
+          isOpen ? 'block' : 'hidden'
+        }`}
+      >
+        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
+          Dashboard Filters
+        </h4>
+        <div className="space-y-4">
+          {/* Account Filter */}
+          <div className="relative group">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <Building2 size={14} />
+            </div>
+            <select
+              value={filters.account}
+              onChange={(e) => onFilterChange('account', e.target.value)}
+              className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-opus-blue/20 appearance-none cursor-pointer hover:border-opus-blue transition-colors shadow-sm"
+            >
+              <option>All Accounts</option>
+              <option>Federal Bank</option>
+              <option>ICICI Bank</option>
+            </select>
+            <ChevronLeft
+              size={12}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 -rotate-90 pointer-events-none"
+            />
+          </div>
+
+          {/* Time Filter */}
+          <div className="relative group">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <Clock size={14} />
+            </div>
+            <select
+              value={filters.range}
+              onChange={(e) => onFilterChange('range', e.target.value)}
+              className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-opus-blue/20 appearance-none cursor-pointer hover:border-opus-blue transition-colors shadow-sm"
+            >
+              <option>Last Month</option>
+              <option>Last 3 Months</option>
+              <option>Last 6 Months</option>
+            </select>
+            <ChevronLeft
+              size={12}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 -rotate-90 pointer-events-none"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;
