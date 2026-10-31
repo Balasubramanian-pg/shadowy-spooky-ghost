@@ -1,2 +1,2 @@
 export * from './Overview';
-expor
+export { default } from './Overview';
