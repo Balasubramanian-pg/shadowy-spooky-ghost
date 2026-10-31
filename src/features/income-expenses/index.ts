@@ -1,2 +1,2 @@
 export * from './IncomeExpenses';
-expor
+export { default } from './IncomeExpenses';
