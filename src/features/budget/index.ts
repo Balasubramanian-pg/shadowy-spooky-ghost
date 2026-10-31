@@ -1,2 +1,2 @@
 export * from './Budget';
-expor
+export { default } from './Budget';
