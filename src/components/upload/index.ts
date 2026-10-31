@@ -1,2 +1,2 @@
 export * from './FileUploader';
-expor
+export { default } from './FileUploader';
