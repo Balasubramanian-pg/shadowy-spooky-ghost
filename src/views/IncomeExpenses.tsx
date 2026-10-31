@@ -1,2 +1,2 @@
 export * from '../features/income-expenses';
-expor
+export { default } from '../features/income-expenses';
