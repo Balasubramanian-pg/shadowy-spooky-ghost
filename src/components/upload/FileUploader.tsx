@@ -1,0 +1,85 @@
+import React, { useState, useCallback } from 'react';
+import { Upload, FileSpreadsheet, AlertCircle, Database } from 'lucide-react';
+import { DashboardDataset } from '../../types';
+import { parseExcelFile } from '../../services/excelParser';
+
+interface FileUploaderProps {
+  onDataLoaded: (data: DashboardDataset) => void;
+  onLoadDemo: () => void;
+}
+
+export const FileUploader: React.FC<FileUploaderProps> = ({ onDataLoaded, onLoadDemo }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const processFile = async (file: File) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const parsed = await parseExcelFile(file);
+      onDataLoaded(parsed);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Failed to parse Excel file. Check the format.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processFile(e.dataTransfer.files[0]);
+    }
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Left: Upload Area */}
+        <div className="space-y-6">
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl font-bold text-slate-800 tracking-tight mb-2">Welcome to Opus</h1>
+            <p className="text-slate-500 text-lg">Upload your financial data to generate your personalized dashboard.</p>
+          </div>
+
+          <div
+            className={`bg-white border-2 border-dashed rounded-3xl p-10 text-center transition-all duration-300 ${
+              isDragging ? 'border-opus-blue bg-blue-50/50' : 'border-slate-200 hover:border-opus-blue/50'
+            }`}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={onDrop}
+          >
+            <div className="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-opus-blue">
+              {loading ? (
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-current"></div>
+              ) : (
+                <Upload size={32} />
+              )}
+            </div>
+
+            <h3 className="text-xl font-bold text-slate-700 mb-2">
+              {loading ? 'Processing...' : 'Drag & Drop Excel File'}
+            </h3>
+            <p className="text-slate-400 mb-8 text-sm">or click to browse from computer</p>
+
+            <label className="inline-flex cursor-pointer">
+              <input
+                type="file"
+                className="hidden"
+                accept=".xlsx, .xls"
+                onChange={(e) => e.target.files && processFile(e.target.files[0])}
+              />
+              <span className="bg-opus-blue text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+                Select File
+              </span>
+            </label>
+
+       
