@@ -82,4 +82,80 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onDataLoaded, onLoad
               </span>
             </label>
 
-       
+            {error && (
+              <div className="mt-6 p-3 bg-red-50 text-red-600 rounded-lg text-sm flex items-center justify-center">
+                <AlertCircle size={16} className="mr-2 flex-shrink-0" /> {error}
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-center">
+            <button
+              onClick={onLoadDemo}
+              className="text-sm font-semibold text-slate-500 hover:text-opus-blue transition-colors flex items-center"
+            >
+              <Database size={14} className="mr-2" /> Don&apos;t have a file? Load Demo Data
+            </button>
+          </div>
+        </div>
+
+        {/* Right: Instructions */}
+        <div className="bg-white rounded-3xl p-8 shadow-soft border border-slate-100 flex flex-col justify-center h-full">
+          <h3 className="font-bold text-slate-800 text-lg mb-6 flex items-center">
+            <FileSpreadsheet className="mr-2 text-opus-teal" size={20} />
+            Required Excel Structure
+          </h3>
+
+          <div className="space-y-6 text-sm overflow-y-auto max-h-[500px] pr-2 custom-scrollbar">
+            <div className="group">
+              <h4 className="font-bold text-slate-700 mb-2 bg-slate-50 p-2 rounded-lg">Sheet: Transactions</h4>
+              <div className="grid grid-cols-2 gap-2 text-slate-500 pl-2">
+                <span>date <span className="text-xs text-slate-400">(YYYY-MM-DD)</span></span>
+                <span>amount</span>
+                <span>description</span>
+                <span>type <span className="text-xs text-slate-400">(income/expense)</span></span>
+                <span>category</span>
+                <span>status <span className="text-xs text-slate-400">(posted)</span></span>
+                <span>account</span>
+                <span>isRecurring <span className="text-xs text-slate-400">(true/false)</span></span>
+              </div>
+            </div>
+
+            <div className="group">
+              <h4 className="font-bold text-slate-700 mb-2 bg-slate-50 p-2 rounded-lg">Sheet: Budget</h4>
+              <div className="grid grid-cols-2 gap-2 text-slate-500 pl-2">
+                <span>category</span>
+                <span>budget</span>
+                <span>actual</span>
+              </div>
+            </div>
+
+            <div className="group">
+              <h4 className="font-bold text-slate-700 mb-2 bg-slate-50 p-2 rounded-lg">Sheet: Investments</h4>
+              <div className="grid grid-cols-2 gap-2 text-slate-500 pl-2">
+                <span>ticker</span>
+                <span>costBasis</span>
+                <span>name</span>
+                <span>currentPrice</span>
+                <span>shares</span>
+              </div>
+            </div>
+
+            <div className="group">
+              <h4 className="font-bold text-slate-700 mb-2 bg-slate-50 p-2 rounded-lg">Sheet: Goals</h4>
+              <div className="grid grid-cols-2 gap-2 text-slate-500 pl-2">
+                <span>name</span>
+                <span>targetDate</span>
+                <span>targetAmount</span>
+                <span>priority</span>
+                <span>currentAmount</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FileUploader;
